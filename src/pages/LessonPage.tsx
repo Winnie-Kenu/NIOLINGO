@@ -130,22 +130,22 @@ const LessonPage = () => {
                 <Star className="h-12 w-12 text-gold-foreground" />
               </div>
               <h2 className="font-display text-3xl font-bold text-primary">
-                You don finish! 🎉
+                🎉 🏆
               </h2>
-              <p className="text-center font-body text-muted-foreground">
-                You learn well well. Score: {exerciseScore}%
+              <p className="text-center font-body text-2xl text-foreground font-bold">
+                {exerciseScore}%
               </p>
               <div className="flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-2">
                 <Star className="h-5 w-5 text-secondary" />
                 <span className="font-display font-bold text-secondary-foreground">
-                  +{exerciseScore >= 80 ? 20 : 10} XP
+                  +{exerciseScore >= 80 ? 20 : 10} ⭐
                 </span>
               </div>
               <button
                 onClick={() => navigate("/")}
                 className="mt-4 w-full max-w-sm rounded-xl gradient-hero px-6 py-3.5 font-display text-lg font-semibold text-primary-foreground shadow-card transition-transform active:scale-95"
               >
-                Go back
+                🏠
               </button>
             </motion.div>
           )}
