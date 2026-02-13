@@ -63,7 +63,7 @@ const ExerciseStep = ({ exercises, onComplete }: Props) => {
       </div>
 
       <p className="font-display text-lg font-semibold text-foreground">
-        Wetin be dis?
+        ❓🖼️
       </p>
 
       <div className="w-full max-w-sm space-y-3">
@@ -122,13 +122,13 @@ const ExerciseStep = ({ exercises, onComplete }: Props) => {
                 : "bg-destructive/10 text-destructive"
             }`}
           >
-            {isCorrect ? "Correct! 🎉" : `Na: "${exercise.answer}"`}
+            {isCorrect ? "✅ 🎉" : `➡️ "${exercise.answer}"`}
           </div>
           <button
             onClick={handleNext}
             className="mt-4 w-full rounded-xl gradient-hero px-6 py-3.5 font-display text-lg font-semibold text-primary-foreground shadow-card transition-transform active:scale-95"
           >
-            {currentIndex < exercises.length - 1 ? "Next" : "Finish"}
+            {currentIndex < exercises.length - 1 ? "▶" : "🏁"}
           </button>
         </motion.div>
       )}

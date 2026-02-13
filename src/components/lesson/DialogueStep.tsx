@@ -14,7 +14,7 @@ const DialogueStep = ({ dialogues, onNext }: Props) => {
       className="flex flex-col items-center gap-6 px-4"
     >
       <h2 className="font-display text-xl font-bold text-primary">
-        Dialogue
+        💬
       </h2>
 
       <div className="w-full max-w-sm space-y-4">
@@ -65,7 +65,7 @@ const DialogueStep = ({ dialogues, onNext }: Props) => {
         onClick={onNext}
         className="mt-4 w-full max-w-sm rounded-xl gradient-hero px-6 py-3.5 font-display text-lg font-semibold text-primary-foreground shadow-card transition-transform active:scale-95"
       >
-        Continue
+        ▶
       </button>
     </motion.div>
   );

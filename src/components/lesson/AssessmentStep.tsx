@@ -52,10 +52,10 @@ const AssessmentStep = ({ assessment, onComplete }: Props) => {
       className="flex flex-col items-center gap-6 px-4"
     >
       <h2 className="font-display text-xl font-bold text-primary">
-        Match am!
+        🔗
       </h2>
       <p className="text-sm text-muted-foreground">
-        Touch the word, then touch the picture
+        📝 ➡️ 🖼️
       </p>
 
       {/* Words */}

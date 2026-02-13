@@ -32,26 +32,26 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-3 gap-3"
         >
-          <div className="flex flex-col items-center rounded-2xl bg-card p-4 shadow-card">
+        <div className="flex flex-col items-center rounded-2xl bg-card p-4 shadow-card">
             <Flame className="h-7 w-7 text-accent mb-1" />
             <span className="font-display text-2xl font-bold text-foreground">
               {streak}
             </span>
-            <span className="text-xs text-muted-foreground">Streak</span>
+            <span className="text-xs text-muted-foreground">🔥</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl bg-card p-4 shadow-card">
             <Star className="h-7 w-7 text-secondary mb-1" />
             <span className="font-display text-2xl font-bold text-foreground">
               {xp}
             </span>
-            <span className="text-xs text-muted-foreground">XP</span>
+            <span className="text-xs text-muted-foreground">⭐</span>
           </div>
           <div className="flex flex-col items-center rounded-2xl bg-card p-4 shadow-card">
             <BookOpen className="h-7 w-7 text-primary mb-1" />
             <span className="font-display text-2xl font-bold text-foreground">
               {getTotalWordsLearned()}
             </span>
-            <span className="text-xs text-muted-foreground">Words</span>
+            <span className="text-xs text-muted-foreground">📖</span>
           </div>
         </motion.div>
 
@@ -60,7 +60,7 @@ const Index = () => {
           <div className="flex items-center gap-2 mb-1">
             <div className="h-1.5 w-1.5 rounded-full bg-primary" />
             <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Unit 1
+              📚 1
             </span>
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">
@@ -77,7 +77,7 @@ const Index = () => {
             />
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            {completedLessons} / {curriculum.lessons.length} lessons
+            ✅ {completedLessons} / {curriculum.lessons.length}
           </p>
         </div>
 
@@ -129,12 +129,12 @@ const Index = () => {
                     {lesson.lesson_title}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {lesson.presentations.length} words •{" "}
-                    {lesson.dialogues.length} dialogues
+                    📖 {lesson.presentations.length} • 💬{" "}
+                    {lesson.dialogues.length}
                   </p>
                   {completed && (
                     <p className="text-xs font-semibold text-primary mt-0.5">
-                      Best: {progress.bestScore}%
+                      🏆 {progress.bestScore}%
                     </p>
                   )}
                 </div>

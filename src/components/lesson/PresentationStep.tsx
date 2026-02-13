@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { BookOpenText, Globe } from "lucide-react";
 import type { Presentation } from "@/data/curriculum";
 
 interface Props {
@@ -37,15 +38,15 @@ const PresentationStep = ({ presentations, currentIndex, onNext }: Props) => {
 
       <div className="w-full max-w-sm space-y-3">
         <div className="rounded-xl bg-muted p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-            Grammar
-          </p>
+          <div className="flex items-center gap-1.5 mb-1">
+            <BookOpenText className="h-4 w-4 text-muted-foreground" />
+          </div>
           <p className="font-body text-sm text-foreground">{item.grammar}</p>
         </div>
         <div className="rounded-xl bg-secondary/20 p-4">
-          <p className="text-xs font-semibold uppercase tracking-wider text-secondary-foreground/60 mb-1">
-            Cultural Note
-          </p>
+          <div className="flex items-center gap-1.5 mb-1">
+            <Globe className="h-4 w-4 text-secondary-foreground/60" />
+          </div>
           <p className="font-body text-sm text-foreground">
             {item.cultural_note}
           </p>
@@ -56,7 +57,7 @@ const PresentationStep = ({ presentations, currentIndex, onNext }: Props) => {
         onClick={onNext}
         className="mt-4 w-full max-w-sm rounded-xl gradient-hero px-6 py-3.5 font-display text-lg font-semibold text-primary-foreground shadow-card transition-transform active:scale-95"
       >
-        Continue
+        ▶
       </button>
     </motion.div>
   );

@@ -26,7 +26,7 @@ const Header = () => {
           <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5">
             <Star className="h-4 w-4 text-secondary" />
             <span className="font-display text-sm font-semibold text-foreground">
-              {xp} XP
+              {xp} ⭐
             </span>
           </div>
         </div>
