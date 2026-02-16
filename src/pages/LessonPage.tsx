@@ -1,10 +1,9 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Star } from "lucide-react";
+import { ArrowLeft, Star, Trophy, Sparkles, ArrowRight, Home, BookOpen, MessageSquare, Dumbbell, Link2, Flag } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { curriculum } from "@/data/curriculum";
 import { useGameStore } from "@/stores/useGameStore";
-import Header from "@/components/layout/Header";
 import PresentationStep from "@/components/lesson/PresentationStep";
 import DialogueStep from "@/components/lesson/DialogueStep";
 import ExerciseStep from "@/components/lesson/ExerciseStep";
@@ -23,72 +22,94 @@ const LessonPage = () => {
   const [presentationIndex, setPresentationIndex] = useState(0);
   const [exerciseScore, setExerciseScore] = useState(0);
 
-  const totalSteps = lesson.presentations.length + 3; // presentations + dialogue + exercise + assessment
-  const currentStep =
-    phase === "presentation"
-      ? presentationIndex + 1
-      : phase === "dialogue"
-      ? lesson.presentations.length + 1
-      : phase === "exercise"
-      ? lesson.presentations.length + 2
-      : phase === "assessment"
-      ? lesson.presentations.length + 3
-      : totalSteps;
-
   const handlePresentationNext = useCallback(() => {
     if (presentationIndex < lesson.presentations.length - 1) {
       setPresentationIndex((i) => i + 1);
     } else {
       setPhase("dialogue");
     }
-  }, [presentationIndex, lesson.presentations.length]);
+  }, [presentationIndex, lesson?.presentations.length]);
+
+  const handlePresentationPrevious = useCallback(() => {
+    if (presentationIndex > 0) {
+      setPresentationIndex((i) => i - 1);
+    } else {
+      navigate("/");
+    }
+  }, [presentationIndex, navigate]);
 
   const handleDialogueNext = () => setPhase("exercise");
+  const handleDialoguePrevious = () => setPhase("presentation");
 
   const handleExerciseComplete = (score: number) => {
     setExerciseScore(score);
     setPhase("assessment");
   };
+  const handleExercisePrevious = () => setPhase("dialogue");
 
   const handleAssessmentComplete = (score: number) => {
     const finalScore = Math.round((exerciseScore + score) / 2);
     completeLesson(idx, finalScore);
     setPhase("complete");
   };
+  const handleAssessmentPrevious = () => setPhase("exercise");
 
   if (!lesson) {
     navigate("/");
     return null;
   }
 
+  // Calculate Progress for the top bar
+  const getProgress = () => {
+    switch (phase) {
+      case "presentation": return ((presentationIndex + 1) / lesson.presentations.length) * 20;
+      case "dialogue": return 25 + 15;
+      case "exercise": return 50 + 10;
+      case "assessment": return 75 + 10;
+      case "complete": return 100;
+      default: return 0;
+    }
+  };
+
+  const getPhaseIcon = () => {
+    switch (phase) {
+      case "presentation": return <BookOpen className="w-5 h-5" />;
+      case "dialogue": return <MessageSquare className="w-5 h-5" />;
+      case "exercise": return <Dumbbell className="w-5 h-5" />;
+      case "assessment": return <Link2 className="w-5 h-5" />;
+      default: return <Trophy className="w-5 h-5" />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
-      {/* Progress bar */}
-      <div className="sticky top-14 z-40 bg-card/80 backdrop-blur-sm px-4 py-2">
-        <div className="container flex items-center gap-3">
+      {/* Global Lesson Header */}
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-md">
+        <div className="container flex h-16 items-center justify-between gap-4 px-4">
           <button
             onClick={() => navigate("/")}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="p-2 hover:bg-muted rounded-full transition-colors"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <Home className="w-6 h-6 text-muted-foreground" />
           </button>
-          <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
-            <motion.div
-              className="h-full rounded-full gradient-hero"
-              initial={{ width: 0 }}
-              animate={{ width: `${(currentStep / totalSteps) * 100}%` }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            />
-          </div>
-          <span className="text-xs font-semibold text-muted-foreground min-w-[3rem] text-right">
-            {currentStep}/{totalSteps}
-          </span>
-        </div>
-      </div>
 
-      <main className="container py-8 pb-20">
+          <div className="flex-1 flex flex-col gap-1">
+            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+              <motion.div
+                className="h-full bg-primary"
+                initial={{ width: 0 }}
+                animate={{ width: `${getProgress()}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-primary/10 text-primary">
+            {getPhaseIcon()}
+          </div>
+        </div>
+      </header>
+
+      <main className="container py-8 pb-32 px-4">
         <AnimatePresence mode="wait">
           {phase === "presentation" && (
             <PresentationStep
@@ -96,6 +117,7 @@ const LessonPage = () => {
               presentations={lesson.presentations}
               currentIndex={presentationIndex}
               onNext={handlePresentationNext}
+              onPrevious={handlePresentationPrevious}
             />
           )}
           {phase === "dialogue" && (
@@ -103,6 +125,7 @@ const LessonPage = () => {
               key="dialogue"
               dialogues={lesson.dialogues}
               onNext={handleDialogueNext}
+              onPrevious={handleDialoguePrevious}
             />
           )}
           {phase === "exercise" && (
@@ -110,6 +133,7 @@ const LessonPage = () => {
               key="exercise"
               exercises={lesson.exercises}
               onComplete={handleExerciseComplete}
+              onPrevious={handleExercisePrevious}
             />
           )}
           {phase === "assessment" && lesson.assessment[0] && (
@@ -117,35 +141,52 @@ const LessonPage = () => {
               key="assessment"
               assessment={lesson.assessment[0]}
               onComplete={handleAssessmentComplete}
+              onPrevious={handleAssessmentPrevious}
             />
           )}
           {phase === "complete" && (
             <motion.div
               key="complete"
-              initial={{ opacity: 0, scale: 0.8 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center gap-6 pt-10"
+              className="flex flex-col items-center gap-12 text-center"
             >
-              <div className="flex h-24 w-24 items-center justify-center rounded-full gradient-gold animate-pulse-glow">
-                <Star className="h-12 w-12 text-gold-foreground" />
+              <div className="relative group">
+                <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full group-hover:bg-yellow-400/30 transition-all" />
+                <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-2xl">
+                  <Trophy className="h-16 w-16 text-white" />
+                </div>
               </div>
-              <h2 className="font-display text-3xl font-bold text-primary">
-                🎉 🏆
-              </h2>
-              <p className="text-center font-body text-2xl text-foreground font-bold">
-                {exerciseScore}%
-              </p>
-              <div className="flex items-center gap-2 rounded-full bg-secondary/20 px-4 py-2">
-                <Star className="h-5 w-5 text-secondary" />
-                <span className="font-display font-bold text-secondary-foreground">
-                  +{exerciseScore >= 80 ? 20 : 10} ⭐
-                </span>
+
+              <div className="space-y-6">
+                <div className="flex justify-center gap-2">
+                  {[1, 2, 3].map(i => (
+                    <motion.div
+                      key={i}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: i * 0.1, type: "spring" }}
+                    >
+                      <Star className="w-10 h-10 fill-yellow-400 text-yellow-500 animate-bounce" style={{ animationDelay: `${i * 0.1}s` }} />
+                    </motion.div>
+                  ))}
+                </div>
               </div>
+
+              <div className="w-full max-w-sm bg-card border-2 border-border p-8 rounded-[40px] shadow-xl flex flex-col items-center gap-4">
+                <Trophy className="w-8 h-8 text-secondary mb-2" />
+                <div className="text-7xl font-black text-primary">{exerciseScore}%</div>
+                <div className="flex items-center justify-center gap-2 py-3 px-6 bg-primary/10 rounded-2xl text-primary font-bold">
+                  <Sparkles className="w-6 h-6 text-secondary" />
+                  <span className="text-xl">+{exerciseScore >= 80 ? 20 : 10}</span>
+                </div>
+              </div>
+
               <button
                 onClick={() => navigate("/")}
-                className="mt-4 w-full max-w-sm rounded-xl gradient-hero px-6 py-3.5 font-display text-lg font-semibold text-primary-foreground shadow-card transition-transform active:scale-95"
+                className="w-full max-w-sm flex items-center justify-center gap-3 rounded-2xl gradient-hero px-6 py-5 text-white shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
               >
-                🏠
+                <ArrowRight className="w-10 h-10" strokeWidth={3} />
               </button>
             </motion.div>
           )}

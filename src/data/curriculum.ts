@@ -308,7 +308,7 @@ export const curriculum: Unit = {
             { word: "How far?", picture: howFarImg },
             { word: "Una well done o", picture: unaWellDoneImg },
             { word: "Bye bye o", picture: byeByeImg },
-            { word: "We go see tomo rrow", picture: weGoSeeImg },
+            { word: "We go see tomorrow", picture: weGoSeeImg },
           ],
         },
       ],
