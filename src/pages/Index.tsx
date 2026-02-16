@@ -18,7 +18,7 @@ import { useGameStore } from "@/stores/useGameStore";
 import Mascot from "@/components/ui/Mascot";
 import useSound from "use-sound";
 import { useHaptics } from "@/hooks/useHaptics";
-import heroImg from "@/assets/niolingo.png";
+import heroImg from "@/assets/Niolingo.png";
 
 const Index = () => {
   const navigate = useNavigate();
