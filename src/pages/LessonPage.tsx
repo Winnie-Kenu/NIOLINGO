@@ -121,16 +121,16 @@ const LessonPage = () => {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 w-full border-b border-border bg-card/85 backdrop-blur-xl">
-        <div className="container flex h-20 items-center justify-between gap-4 px-6">
+        <div className="container flex h-16 sm:h-20 items-center justify-between gap-3 sm:gap-4 px-4 sm:px-6">
           <button
             onClick={() => { playClick(); navigate("/"); }}
-            className="p-3 hover:bg-muted rounded-2xl transition-all shadow-sm border border-border/40"
+            className="p-2 sm:p-3 hover:bg-muted rounded-xl sm:rounded-2xl transition-all shadow-sm border border-border/40"
           >
-            <Home className="w-7 h-7 text-muted-foreground" />
+            <Home className="w-5 h-5 sm:w-7 sm:h-7 text-muted-foreground" />
           </button>
 
-          <div className="flex-1 flex flex-col gap-2">
-            <div className="h-3 w-full bg-muted/60 rounded-full overflow-hidden border border-border/20 shadow-inner">
+          <div className="flex-1 flex flex-col gap-1.5 sm:gap-2">
+            <div className="h-2.5 sm:h-3 w-full bg-muted/60 rounded-full overflow-hidden border border-border/20 shadow-inner">
               <motion.div
                 className="h-full bg-gradient-to-r from-primary/80 to-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]"
                 initial={{ width: 0 }}
@@ -140,13 +140,13 @@ const LessonPage = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center h-12 w-12 rounded-2xl bg-primary/10 text-primary border-2 border-primary/20 shadow-md">
+          <div className="flex items-center justify-center h-10 w-10 sm:h-12 sm:w-12 rounded-xl sm:rounded-2xl bg-primary/10 text-primary border-2 border-primary/20 shadow-md">
             {getPhaseIcon()}
           </div>
         </div>
       </header>
 
-      <main className="container py-8 pb-32 px-6">
+      <main className="container py-6 sm:py-8 pb-32 px-4 sm:px-6">
         <AnimatePresence mode="wait">
           {phase === "presentation" && (
             <PresentationStep
@@ -186,16 +186,16 @@ const LessonPage = () => {
               key="complete"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center gap-12 text-center"
+              className="flex flex-col items-center gap-6 sm:gap-12 text-center"
             >
               <div className="relative group">
-                <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full" />
-                <Mascot size="xl" type="cheering" className="scale-125" />
+                <div className="absolute inset-0 bg-yellow-400/20 blur-2xl sm:blur-3xl rounded-full" />
+                <Mascot size="lg" type="cheering" className="sm:scale-125" />
               </div>
 
-              <div className="space-y-6">
-                <h2 className="font-display text-5xl font-black text-foreground drop-shadow-sm tracking-tight">Oya!</h2>
-                <div className="flex justify-center gap-3">
+              <div className="space-y-4 sm:space-y-6">
+                <h2 className="font-display text-4xl sm:text-5xl font-black text-foreground drop-shadow-sm tracking-tight">Oya!</h2>
+                <div className="flex justify-center gap-2 sm:gap-3">
                   {[1, 2, 3].map(i => (
                     <motion.div
                       key={i}
@@ -203,27 +203,27 @@ const LessonPage = () => {
                       animate={{ scale: 1, rotate: 0 }}
                       transition={{ delay: 0.5 + i * 0.1, type: "spring" }}
                     >
-                      <Star className="w-12 h-12 fill-yellow-400 text-yellow-500 animate-pulse-glow" style={{ animationDelay: `${i * 0.2}s` }} />
+                      <Star className="w-8 h-8 sm:w-12 sm:h-12 fill-yellow-400 text-yellow-500 animate-pulse-glow" style={{ animationDelay: `${i * 0.2}s` }} />
                     </motion.div>
                   ))}
                 </div>
               </div>
 
-              <div className="w-full max-w-sm bg-card border-4 border-border/80 p-10 rounded-[48px] shadow-2xl flex flex-col items-center gap-6 relative overflow-hidden group">
+              <div className="w-full max-w-sm bg-card border-[3px] sm:border-4 border-border/80 p-6 sm:p-10 rounded-[32px] sm:rounded-[48px] shadow-2xl flex flex-col items-center gap-4 sm:gap-6 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <Trophy className="w-12 h-12 text-secondary mb-2 drop-shadow-md" />
-                <div className="text-8xl font-black text-primary tracking-tighter">{exerciseScore}%</div>
-                <div className="flex items-center justify-center gap-3 py-4 px-8 bg-primary/10 rounded-[24px] text-primary font-black border-2 border-primary/20">
-                  <Sparkles className="w-8 h-8 text-secondary" />
-                  <span className="text-3xl">+{exerciseScore >= 80 ? 20 : 10}</span>
+                <Trophy className="w-8 h-8 sm:w-12 sm:h-12 text-secondary mb-1 sm:mb-2 drop-shadow-md" />
+                <div className="text-6xl sm:text-8xl font-black text-primary tracking-tighter leading-none">{exerciseScore}%</div>
+                <div className="flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 px-6 sm:px-8 bg-primary/10 rounded-2xl sm:rounded-[24px] text-primary font-black border-2 border-primary/20">
+                  <Sparkles className="w-5 h-5 sm:w-8 sm:h-8 text-secondary" />
+                  <span className="text-xl sm:text-3xl">+{exerciseScore >= 80 ? 20 : 10}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => { playClick(); haptics.triggerClick(); navigate("/"); }}
-                className="w-full max-w-sm flex items-center justify-center rounded-[32px] gradient-hero py-6 text-white shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-[1.05] active:scale-95 transition-all"
+                className="w-full max-w-sm flex items-center justify-center rounded-2xl sm:rounded-[32px] gradient-hero py-4 sm:py-6 text-white shadow-[0_15px_30px_rgba(var(--primary),0.3)] hover:scale-[1.05] active:scale-95 transition-all"
               >
-                <ArrowRight className="w-12 h-12" strokeWidth={4} />
+                <ArrowRight className="w-8 h-8 sm:w-12 sm:h-12" strokeWidth={4} />
               </button>
             </motion.div>
           )}

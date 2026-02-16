@@ -45,7 +45,7 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
   const isSameImage = img1 === img2;
 
   return (
-    <div className="relative flex flex-col items-center gap-8 w-full max-w-lg mx-auto">
+    <div className="relative flex flex-col items-center gap-6 sm:gap-8 w-full max-w-lg mx-auto">
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
@@ -53,12 +53,12 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ duration: 0.3 }}
-          className="w-full flex flex-col gap-8 pb-32"
+          className="w-full flex flex-col gap-6 sm:gap-8 pb-32"
         >
           {/* Visual Context */}
-          <div className="w-full">
+          <div className="w-full px-1">
             {isSameImage ? (
-              <div className="relative w-full aspect-[4/3] rounded-[40px] overflow-hidden border-4 border-primary/10 shadow-2xl">
+              <div className="relative w-full aspect-[4/3] rounded-3xl sm:rounded-[40px] overflow-hidden border-[3px] sm:border-4 border-primary/10 shadow-2xl">
                 <img
                   src={img1}
                   alt="Context"
@@ -66,15 +66,15 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-4 aspect-[16/9]">
-                <div className="relative rounded-3xl overflow-hidden border-4 border-primary/10 shadow-xl">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 aspect-[16/9]">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-[3px] sm:border-4 border-primary/10 shadow-xl">
                   <img
                     src={img1}
                     alt="Speaker 1 context"
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="relative rounded-3xl overflow-hidden border-4 border-secondary/10 shadow-xl">
+                <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border-[3px] sm:border-4 border-secondary/10 shadow-xl">
                   <img
                     src={img2}
                     alt="Speaker 2 context"
@@ -86,26 +86,26 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
           </div>
 
           {/* Dialogue Bubbles */}
-          <div className="flex flex-col gap-8 w-full">
+          <div className="flex flex-col gap-6 sm:gap-8 w-full">
             {/* Speaker 1 */}
-            <div className="flex flex-col items-start gap-2 mr-12">
-              <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 rounded-full">
-                <User className="w-4 h-4 text-primary" />
+            <div className="flex flex-col items-start gap-1.5 sm:gap-2 mr-6 sm:mr-12">
+              <div className="flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 bg-primary/10 rounded-full">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
               </div>
-              <div className="rounded-[32px] rounded-tl-sm bg-primary px-6 py-6 shadow-xl w-full relative border-b-4 border-primary-foreground/20">
-                <p className="font-display text-2xl font-black text-white leading-tight">
+              <div className="rounded-2xl sm:rounded-[32px] rounded-tl-sm bg-primary px-4 sm:px-6 py-4 sm:py-6 shadow-xl w-full relative border-b-4 border-primary-foreground/20">
+                <p className="font-display text-xl sm:text-2xl font-black text-white leading-tight">
                   {currentDialogue.speaker1}
                 </p>
               </div>
             </div>
 
             {/* Speaker 2 */}
-            <div className="flex flex-col items-end gap-2 ml-12">
-              <div className="flex items-center gap-2 px-3 py-1 bg-muted rounded-full">
-                <User className="w-4 h-4 text-muted-foreground" />
+            <div className="flex flex-col items-end gap-1.5 sm:gap-2 ml-6 sm:ml-12">
+              <div className="flex items-center gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 bg-muted rounded-full">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
               </div>
-              <div className="rounded-[32px] rounded-tr-sm bg-muted px-6 py-6 shadow-xl w-full relative border-b-4 border-muted-foreground/10">
-                <p className="font-display text-2xl font-black text-foreground leading-tight text-right">
+              <div className="rounded-2xl sm:rounded-[32px] rounded-tr-sm bg-muted px-4 sm:px-6 py-4 sm:py-6 shadow-xl w-full relative border-b-4 border-muted-foreground/10">
+                <p className="font-display text-xl sm:text-2xl font-black text-foreground leading-tight text-right">
                   {currentDialogue.speaker2}
                 </p>
               </div>
@@ -115,25 +115,25 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
       </AnimatePresence>
 
       {/* Primary Actions (Sticky) */}
-      <div className="fixed bottom-6 left-0 right-0 p-4 flex justify-center z-20 pointer-events-none gap-4">
+      <div className="fixed bottom-6 left-0 right-0 p-4 flex justify-center z-20 pointer-events-none gap-3 sm:gap-4">
         <div className="pointer-events-auto shadow-xl rounded-full">
           <button
             onClick={handlePrevious}
-            className="w-16 h-16 flex items-center justify-center rounded-full bg-background border-2 border-border hover:bg-muted transition-colors text-muted-foreground"
+            className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-background border-2 border-border hover:bg-muted transition-colors text-muted-foreground"
           >
-            <ArrowLeft className="w-8 h-8" strokeWidth={3} />
+            <ArrowLeft className="w-6 h-6 sm:w-8 sm:h-8" strokeWidth={3} />
           </button>
         </div>
 
-        <div className="w-full max-w-xs pointer-events-auto shadow-2xl rounded-2xl">
+        <div className="w-full max-w-[240px] sm:max-w-xs pointer-events-auto shadow-2xl rounded-xl sm:rounded-2xl">
           <button
             onClick={handleNext}
-            className="w-full flex items-center justify-center gap-3 rounded-2xl px-6 py-5 shadow-lg transition-transform active:scale-95 text-xl font-black text-white gradient-hero"
+            className="w-full flex items-center justify-center gap-2 sm:gap-3 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-4 sm:py-5 shadow-lg transition-transform active:scale-95 text-lg sm:text-xl font-black text-white gradient-hero"
           >
             {isLast ? (
-              <Flag className="w-10 h-10" strokeWidth={3} />
+              <Flag className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={3} />
             ) : (
-              <ArrowRight className="w-10 h-10" strokeWidth={3} />
+              <ArrowRight className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={3} />
             )}
           </button>
         </div>

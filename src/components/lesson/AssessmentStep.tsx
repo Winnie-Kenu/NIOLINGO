@@ -100,22 +100,22 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
   };
 
   return (
-    <div className="relative flex flex-col items-center gap-8 w-full max-w-5xl mx-auto">
+    <div className="relative flex flex-col items-center gap-6 sm:gap-8 w-full max-w-5xl mx-auto">
       <AnimatePresence mode="wait">
-        <motion.div key={currentIndex} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="w-full flex flex-col md:flex-row gap-8 pb-32">
+        <motion.div key={currentIndex} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="w-full flex flex-col md:flex-row gap-6 sm:gap-8 pb-32">
           {/* Question Side */}
-          <div className="w-full md:w-1/3 flex flex-col items-center gap-6">
-            <div className="bg-card border-4 border-primary/20 rounded-[40px] p-10 shadow-2xl w-full text-center">
-              <h3 className="font-display text-4xl font-black text-primary leading-tight">{currentPair.word}</h3>
+          <div className="w-full md:w-1/3 flex flex-col items-center gap-4 sm:gap-6">
+            <div className="bg-card border-[3px] sm:border-4 border-primary/20 rounded-3xl sm:rounded-[40px] p-6 sm:p-10 shadow-xl sm:shadow-2xl w-full text-center">
+              <h3 className="font-display text-2xl sm:text-4xl font-black text-primary leading-tight">{currentPair.word}</h3>
             </div>
             <div className="flex flex-col items-center opacity-10">
-              <Equal className="w-16 h-16" />
-              <MoveRight className="w-20 h-20" />
+              <Equal className="w-10 h-10 sm:w-16 sm:h-16" />
+              <MoveRight className="w-12 h-12 sm:w-20 sm:h-20" />
             </div>
           </div>
 
           {/* Options Side */}
-          <div className="w-full md:w-2/3 grid grid-cols-2 gap-6">
+          <div className="w-full md:w-2/3 grid grid-cols-2 gap-3 sm:gap-6">
             {pictureOptions.map((picture, idx) => {
               const isSelected = picture === selectedPicture;
               const isWrong = wrongSelections.has(picture);
@@ -123,13 +123,18 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
               const isCorrect = picture === currentPair.picture;
 
               return (
-                <button key={idx} onClick={() => handleSelect(picture)} disabled={isSolved || isWrong} className={`relative aspect-square rounded-[40px] border-4 overflow-hidden transition-all p-3 ${isSolved && isCorrect ? "border-green-500 bg-green-50" :
+                <button
+                  key={idx}
+                  onClick={() => handleSelect(picture)}
+                  disabled={isSolved || isWrong}
+                  className={`relative aspect-square rounded-2xl sm:rounded-[40px] border-[3px] sm:border-4 overflow-hidden transition-all p-2 sm:p-3 outline-none ${isSolved && isCorrect ? "border-green-500 bg-green-50" :
                     isSolved && isSelected && !isCorrect ? "border-red-500 bg-red-50" :
                       isWrong ? "opacity-30 grayscale cursor-not-allowed scale-95" :
-                        isSelected ? "border-primary bg-primary/5 shadow-[0_0_40px_rgba(var(--primary),0.2)] scale-105" : "border-border/60 bg-card hover:bg-muted/50"
-                  }`}>
+                        isSelected ? "border-primary bg-primary/5 shadow-xl scale-[1.02]" : "border-border/60 bg-card hover:bg-muted/50"
+                    }`}
+                >
                   <img src={picture} className="w-full h-full object-contain" />
-                  <div className="absolute top-4 left-4 w-10 h-10 rounded-2xl bg-white/90 flex items-center justify-center font-black text-lg shadow-sm">{getLetter(idx)}</div>
+                  <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-2xl bg-white/90 flex items-center justify-center font-black text-sm sm:text-lg shadow-sm border border-border/20">{getLetter(idx)}</div>
                 </button>
               );
             })}
@@ -138,25 +143,33 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
       </AnimatePresence>
 
       {!modalState && (
-        <div className="fixed bottom-6 left-0 right-0 p-4 flex justify-center z-20 gap-4 pointer-events-none">
-          <button onClick={() => { playClick(); haptics.triggerClick(); currentIndex > 0 ? setCurrentIndex(i => i - 1) : onPrevious(); }} className="pointer-events-auto w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-xl hover:bg-muted transition-colors">
-            <ArrowLeft className="w-8 h-8 text-muted-foreground" strokeWidth={3} />
+        <div className="fixed bottom-6 left-0 right-0 p-4 flex justify-center z-20 gap-3 sm:gap-4 pointer-events-none">
+          <button onClick={() => { playClick(); haptics.triggerClick(); currentIndex > 0 ? setCurrentIndex(i => i - 1) : onPrevious(); }} className="pointer-events-auto w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-xl hover:bg-muted transition-colors">
+            <ArrowLeft className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" strokeWidth={3} />
           </button>
-          <button onClick={handleConfirm} disabled={!selectedPicture} className={`pointer-events-auto flex-1 max-w-xs rounded-[28px] py-5 shadow-2xl transition-all flex items-center justify-center ${selectedPicture ? "gradient-hero text-white" : "bg-muted text-muted-foreground"}`}>
-            <Check className="w-10 h-10" strokeWidth={3} />
+          <button
+            onClick={handleConfirm}
+            disabled={!selectedPicture}
+            className={`pointer-events-auto flex-1 max-w-[240px] sm:max-w-xs rounded-xl sm:rounded-[28px] py-4 sm:py-5 shadow-2xl transition-all flex items-center justify-center ${selectedPicture ? "gradient-hero text-white" : "bg-muted text-muted-foreground cursor-not-allowed"}`}
+          >
+            <Check className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={3} />
           </button>
         </div>
       )}
 
       {modalState && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
-          <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="bg-card border-4 border-border p-10 rounded-[48px] w-full max-w-sm flex flex-col items-center gap-8 shadow-2xl text-center">
-            <div className={`p-8 rounded-full ${modalState === "correct" ? "bg-green-500 shadow-[0_0_30px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]"} text-white`}>
-              {modalState === "correct" ? <Check className="w-16 h-16" strokeWidth={3} /> : <X className="w-16 h-16" strokeWidth={3} />}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-6">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-card border-[3px] sm:border-4 border-border p-8 sm:p-10 rounded-[32px] sm:rounded-[48px] w-full max-w-sm flex flex-col items-center gap-6 sm:gap-8 shadow-2xl text-center"
+          >
+            <div className={`p-6 sm:p-8 rounded-full ${modalState === "correct" ? "bg-green-500 shadow-[0_0_30px_rgba(34,197,94,0.4)]" : "bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.4)]"} text-white`}>
+              {modalState === "correct" ? <Check className="w-10 h-10 sm:w-16 sm:h-16" strokeWidth={3} /> : <X className="w-10 h-10 sm:w-16 sm:h-16" strokeWidth={3} />}
             </div>
 
-            <button onClick={() => { playClick(); haptics.triggerClick(); modalState === "try_again" ? setModalState(null) : handleNext(); }} className="w-full py-6 rounded-[32px] gradient-hero text-white font-black shadow-2xl flex items-center justify-center transition-transform active:scale-95">
-              {modalState === "try_again" ? <RotateCcw className="w-10 h-10" strokeWidth={3} /> : <ArrowRight className="w-10 h-10" strokeWidth={3} />}
+            <button onClick={() => { playClick(); haptics.triggerClick(); modalState === "try_again" ? setModalState(null) : handleNext(); }} className="w-full py-5 sm:py-6 rounded-2xl sm:rounded-[32px] gradient-hero text-white font-black shadow-2xl flex items-center justify-center transition-transform active:scale-95 text-lg sm:text-xl">
+              {modalState === "try_again" ? <RotateCcw className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={3} /> : <ArrowRight className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={3} />}
             </button>
           </motion.div>
         </div>
