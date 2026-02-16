@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Check, X, RotateCcw, Equal, MoveRight } from "lucide-react";
 import type { Assessment } from "@/data/curriculum";
+import { useHaptics } from "@/hooks/useHaptics";
+import useSound from "use-sound";
 
 interface Props {
   assessment: Assessment;
@@ -27,6 +29,11 @@ function shuffleNoConsecutive<T>(items: T[], keyFunc: (item: T) => string): T[] 
 }
 
 const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
+  const haptics = useHaptics();
+  const [playSuccess] = useSound("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", { volume: 0.5 });
+  const [playError] = useSound("https://assets.mixkit.co/active_storage/sfx/2014/2014-preview.mp3", { volume: 0.4 });
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.3 });
+
   const learningQueue = useMemo(() => {
     const repeated = [...assessment.pairs, ...assessment.pairs];
     return shuffleNoConsecutive(repeated, (p) => p.word);
@@ -58,15 +65,21 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
   const handleSelect = (picture: string) => {
     if (modalState === "correct" || modalState === "failed") return;
     if (wrongSelections.has(picture)) return;
+    playClick();
+    haptics.triggerClick();
     setSelectedPicture(picture);
   };
 
   const handleConfirm = () => {
     if (!selectedPicture || modalState === "correct" || modalState === "failed") return;
     if (selectedPicture === currentPair.picture) {
+      playSuccess();
+      haptics.triggerSuccess();
       setModalState("correct");
       setCorrectCount(c => c + (attempts === 0 ? 1 : 0.5));
     } else {
+      playError();
+      haptics.triggerError();
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       const newWrong = new Set(wrongSelections);
@@ -77,6 +90,8 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
   };
 
   const handleNext = () => {
+    playClick();
+    haptics.triggerClick();
     if (currentIndex < learningQueue.length - 1) {
       setCurrentIndex(i => i + 1);
     } else {
@@ -124,7 +139,7 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
 
       {!modalState && (
         <div className="fixed bottom-6 left-0 right-0 p-4 flex justify-center z-20 gap-4 pointer-events-none">
-          <button onClick={() => currentIndex > 0 ? setCurrentIndex(i => i - 1) : onPrevious()} className="pointer-events-auto w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-xl hover:bg-muted transition-colors">
+          <button onClick={() => { playClick(); haptics.triggerClick(); currentIndex > 0 ? setCurrentIndex(i => i - 1) : onPrevious(); }} className="pointer-events-auto w-16 h-16 rounded-full bg-background border-2 border-border flex items-center justify-center shadow-xl hover:bg-muted transition-colors">
             <ArrowLeft className="w-8 h-8 text-muted-foreground" strokeWidth={3} />
           </button>
           <button onClick={handleConfirm} disabled={!selectedPicture} className={`pointer-events-auto flex-1 max-w-xs rounded-[28px] py-5 shadow-2xl transition-all flex items-center justify-center ${selectedPicture ? "gradient-hero text-white" : "bg-muted text-muted-foreground"}`}>
@@ -140,7 +155,7 @@ const AssessmentStep = ({ assessment, onComplete, onPrevious }: Props) => {
               {modalState === "correct" ? <Check className="w-16 h-16" strokeWidth={3} /> : <X className="w-16 h-16" strokeWidth={3} />}
             </div>
 
-            <button onClick={modalState === "try_again" ? () => setModalState(null) : handleNext} className="w-full py-6 rounded-[32px] gradient-hero text-white font-black shadow-2xl flex items-center justify-center transition-transform active:scale-95">
+            <button onClick={() => { playClick(); haptics.triggerClick(); modalState === "try_again" ? setModalState(null) : handleNext(); }} className="w-full py-6 rounded-[32px] gradient-hero text-white font-black shadow-2xl flex items-center justify-center transition-transform active:scale-95">
               {modalState === "try_again" ? <RotateCcw className="w-10 h-10" strokeWidth={3} /> : <ArrowRight className="w-10 h-10" strokeWidth={3} />}
             </button>
           </motion.div>

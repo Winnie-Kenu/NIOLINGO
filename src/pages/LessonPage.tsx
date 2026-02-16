@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Star, Trophy, Sparkles, ArrowRight, Home, BookOpen, MessageSquare, Dumbbell, Link2, Flag } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,6 +8,9 @@ import PresentationStep from "@/components/lesson/PresentationStep";
 import DialogueStep from "@/components/lesson/DialogueStep";
 import ExerciseStep from "@/components/lesson/ExerciseStep";
 import AssessmentStep from "@/components/lesson/AssessmentStep";
+import Mascot from "@/components/ui/Mascot";
+import { useHaptics } from "@/hooks/useHaptics";
+import useSound from "use-sound";
 
 type Phase = "presentation" | "dialogue" | "exercise" | "assessment" | "complete";
 
@@ -17,49 +20,83 @@ const LessonPage = () => {
   const idx = Number(lessonIndex);
   const lesson = curriculum.lessons[idx];
   const { completeLesson } = useGameStore();
+  const haptics = useHaptics();
 
   const [phase, setPhase] = useState<Phase>("presentation");
   const [presentationIndex, setPresentationIndex] = useState(0);
   const [exerciseScore, setExerciseScore] = useState(0);
 
+  // Sound effects
+  const [playSuccess] = useSound("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", { volume: 0.5 });
+  const [playTrophy] = useSound("https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3", { volume: 0.6 });
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.3 });
+
+  useEffect(() => {
+    if (phase === "complete") {
+      haptics.triggerTrophy();
+      playTrophy();
+    }
+  }, [phase, haptics, playTrophy]);
+
   const handlePresentationNext = useCallback(() => {
+    playClick();
+    haptics.triggerClick();
     if (presentationIndex < lesson.presentations.length - 1) {
       setPresentationIndex((i) => i + 1);
     } else {
       setPhase("dialogue");
     }
-  }, [presentationIndex, lesson?.presentations.length]);
+  }, [presentationIndex, lesson?.presentations.length, playClick, haptics]);
 
   const handlePresentationPrevious = useCallback(() => {
+    playClick();
+    haptics.triggerClick();
     if (presentationIndex > 0) {
       setPresentationIndex((i) => i - 1);
     } else {
       navigate("/");
     }
-  }, [presentationIndex, navigate]);
+  }, [presentationIndex, navigate, playClick, haptics]);
 
-  const handleDialogueNext = () => setPhase("exercise");
-  const handleDialoguePrevious = () => setPhase("presentation");
+  const handleDialogueNext = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("exercise");
+  };
+  const handleDialoguePrevious = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("presentation");
+  };
 
   const handleExerciseComplete = (score: number) => {
+    playSuccess();
+    haptics.triggerSuccess();
     setExerciseScore(score);
     setPhase("assessment");
   };
-  const handleExercisePrevious = () => setPhase("dialogue");
+  const handleExercisePrevious = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("dialogue");
+  };
 
   const handleAssessmentComplete = (score: number) => {
     const finalScore = Math.round((exerciseScore + score) / 2);
     completeLesson(idx, finalScore);
     setPhase("complete");
   };
-  const handleAssessmentPrevious = () => setPhase("exercise");
+  const handleAssessmentPrevious = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("exercise");
+  };
 
   if (!lesson) {
     navigate("/");
     return null;
   }
 
-  // Calculate Progress for the top bar
   const getProgress = () => {
     switch (phase) {
       case "presentation": return ((presentationIndex + 1) / lesson.presentations.length) * 20;
@@ -83,33 +120,33 @@ const LessonPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Global Lesson Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-card/80 backdrop-blur-md">
-        <div className="container flex h-16 items-center justify-between gap-4 px-4">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-card/85 backdrop-blur-xl">
+        <div className="container flex h-20 items-center justify-between gap-4 px-6">
           <button
-            onClick={() => navigate("/")}
-            className="p-2 hover:bg-muted rounded-full transition-colors"
+            onClick={() => { playClick(); navigate("/"); }}
+            className="p-3 hover:bg-muted rounded-2xl transition-all shadow-sm border border-border/40"
           >
-            <Home className="w-6 h-6 text-muted-foreground" />
+            <Home className="w-7 h-7 text-muted-foreground" />
           </button>
 
-          <div className="flex-1 flex flex-col gap-1">
-            <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
+          <div className="flex-1 flex flex-col gap-2">
+            <div className="h-3 w-full bg-muted/60 rounded-full overflow-hidden border border-border/20 shadow-inner">
               <motion.div
-                className="h-full bg-primary"
+                className="h-full bg-gradient-to-r from-primary/80 to-primary shadow-[0_0_10px_rgba(var(--primary),0.3)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${getProgress()}%` }}
+                transition={{ type: "spring", stiffness: 50, damping: 15 }}
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-center h-10 w-10 rounded-xl bg-primary/10 text-primary">
+          <div className="flex items-center justify-center h-12 w-12 rounded-2xl bg-primary/10 text-primary border-2 border-primary/20 shadow-md">
             {getPhaseIcon()}
           </div>
         </div>
       </header>
 
-      <main className="container py-8 pb-32 px-4">
+      <main className="container py-8 pb-32 px-6">
         <AnimatePresence mode="wait">
           {phase === "presentation" && (
             <PresentationStep
@@ -152,41 +189,41 @@ const LessonPage = () => {
               className="flex flex-col items-center gap-12 text-center"
             >
               <div className="relative group">
-                <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full group-hover:bg-yellow-400/30 transition-all" />
-                <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-yellow-600 shadow-2xl">
-                  <Trophy className="h-16 w-16 text-white" />
-                </div>
+                <div className="absolute inset-0 bg-yellow-400/20 blur-3xl rounded-full" />
+                <Mascot size="xl" type="cheering" className="scale-125" />
               </div>
 
               <div className="space-y-6">
-                <div className="flex justify-center gap-2">
+                <h2 className="font-display text-5xl font-black text-foreground drop-shadow-sm tracking-tight">Oya!</h2>
+                <div className="flex justify-center gap-3">
                   {[1, 2, 3].map(i => (
                     <motion.div
                       key={i}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: i * 0.1, type: "spring" }}
+                      initial={{ scale: 0, rotate: -20 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      transition={{ delay: 0.5 + i * 0.1, type: "spring" }}
                     >
-                      <Star className="w-10 h-10 fill-yellow-400 text-yellow-500 animate-bounce" style={{ animationDelay: `${i * 0.1}s` }} />
+                      <Star className="w-12 h-12 fill-yellow-400 text-yellow-500 animate-pulse-glow" style={{ animationDelay: `${i * 0.2}s` }} />
                     </motion.div>
                   ))}
                 </div>
               </div>
 
-              <div className="w-full max-w-sm bg-card border-2 border-border p-8 rounded-[40px] shadow-xl flex flex-col items-center gap-4">
-                <Trophy className="w-8 h-8 text-secondary mb-2" />
-                <div className="text-7xl font-black text-primary">{exerciseScore}%</div>
-                <div className="flex items-center justify-center gap-2 py-3 px-6 bg-primary/10 rounded-2xl text-primary font-bold">
-                  <Sparkles className="w-6 h-6 text-secondary" />
-                  <span className="text-xl">+{exerciseScore >= 80 ? 20 : 10}</span>
+              <div className="w-full max-w-sm bg-card border-4 border-border/80 p-10 rounded-[48px] shadow-2xl flex flex-col items-center gap-6 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Trophy className="w-12 h-12 text-secondary mb-2 drop-shadow-md" />
+                <div className="text-8xl font-black text-primary tracking-tighter">{exerciseScore}%</div>
+                <div className="flex items-center justify-center gap-3 py-4 px-8 bg-primary/10 rounded-[24px] text-primary font-black border-2 border-primary/20">
+                  <Sparkles className="w-8 h-8 text-secondary" />
+                  <span className="text-3xl">+{exerciseScore >= 80 ? 20 : 10}</span>
                 </div>
               </div>
 
               <button
-                onClick={() => navigate("/")}
-                className="w-full max-w-sm flex items-center justify-center gap-3 rounded-2xl gradient-hero px-6 py-5 text-white shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
+                onClick={() => { playClick(); haptics.triggerClick(); navigate("/"); }}
+                className="w-full max-w-sm flex items-center justify-center rounded-[32px] gradient-hero py-6 text-white shadow-[0_20px_40px_rgba(var(--primary),0.3)] hover:scale-[1.05] active:scale-95 transition-all"
               >
-                <ArrowRight className="w-10 h-10" strokeWidth={3} />
+                <ArrowRight className="w-12 h-12" strokeWidth={4} />
               </button>
             </motion.div>
           )}

@@ -199,19 +199,19 @@ export const curriculum: Unit = {
       ],
     },
     {
-      lesson_title: "Greetings for people wey don old!",
+      lesson_title: "How you go take greet people wey don old!",
       presentations: [
         {
           word: "Good morning Papa, how body?",
           picture: goodMorningPapaImg,
           grammar: "Greet elder men with respect",
-          cultural_note: "Shows respect and consideration for age",
+          cultural_note: "Use am show respect for age",
         },
         {
           word: "Good morning Mama, how body?",
           picture: goodMorningMamaImg,
           grammar: "Take am greet old woman with respect",
-          cultural_note: "Use am show respect for old woman",
+          cultural_note: "Use am show respect for age",
         },
       ],
       dialogues: [

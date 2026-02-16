@@ -2,6 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Check, HelpCircle, RotateCcw, X } from "lucide-react";
 import type { Exercise } from "@/data/curriculum";
+import { useHaptics } from "@/hooks/useHaptics";
+import useSound from "use-sound";
 
 interface Props {
   exercises: Exercise[];
@@ -28,6 +30,11 @@ function shuffleNoConsecutive<T>(items: T[], keyFunc: (item: T) => string): T[] 
 }
 
 const ExerciseStep = ({ exercises, onComplete, onPrevious }: Props) => {
+  const haptics = useHaptics();
+  const [playSuccess] = useSound("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", { volume: 0.5 });
+  const [playError] = useSound("https://assets.mixkit.co/active_storage/sfx/2014/2014-preview.mp3", { volume: 0.4 });
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.3 });
+
   const learningQueue = useMemo(() => {
     const repeated = [...exercises, ...exercises];
     return shuffleNoConsecutive(repeated, (e) => e.question_word || e.answer);
@@ -53,6 +60,8 @@ const ExerciseStep = ({ exercises, onComplete, onPrevious }: Props) => {
   const handleSelect = (option: string) => {
     if (modalState === "correct" || modalState === "failed") return;
     if (wrongSelections.has(option)) return;
+    playClick();
+    haptics.triggerClick();
     setSelectedOption(option);
   };
 
@@ -60,9 +69,13 @@ const ExerciseStep = ({ exercises, onComplete, onPrevious }: Props) => {
     if (!selectedOption || modalState === "correct" || modalState === "failed") return;
 
     if (selectedOption === currentExercise.answer) {
+      playSuccess();
+      haptics.triggerSuccess();
       setModalState("correct");
       setCorrectCount((c) => c + (attempts === 0 ? 1 : 0.5));
     } else {
+      playError();
+      haptics.triggerError();
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       const newWrong = new Set(wrongSelections);
@@ -73,11 +86,15 @@ const ExerciseStep = ({ exercises, onComplete, onPrevious }: Props) => {
   };
 
   const handleRetry = () => {
+    playClick();
+    haptics.triggerClick();
     setModalState(null);
     setSelectedOption(null);
   };
 
   const handleNext = () => {
+    playClick();
+    haptics.triggerClick();
     if (currentIndex < learningQueue.length - 1) {
       setCurrentIndex((i) => i + 1);
     } else {
@@ -86,6 +103,8 @@ const ExerciseStep = ({ exercises, onComplete, onPrevious }: Props) => {
   };
 
   const handlePrevious = () => {
+    playClick();
+    haptics.triggerClick();
     if (currentIndex > 0) {
       setCurrentIndex((i) => i - 1);
     } else {

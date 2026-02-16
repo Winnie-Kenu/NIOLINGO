@@ -2,6 +2,8 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, ArrowRight, ArrowLeft, Flag } from "lucide-react";
 import type { Dialogue } from "@/data/curriculum";
+import useSound from "use-sound";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface Props {
   dialogues: Dialogue[];
@@ -13,8 +15,14 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentDialogue = dialogues[currentIndex];
   const isLast = currentIndex === dialogues.length - 1;
+  const haptics = useHaptics();
+
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.3 });
+  const [playNext] = useSound("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3", { volume: 0.4 });
 
   const handleNext = () => {
+    playNext();
+    haptics.triggerClick();
     if (!isLast) {
       setCurrentIndex((i) => i + 1);
     } else {
@@ -23,6 +31,8 @@ const DialogueStep = ({ dialogues, onNext, onPrevious }: Props) => {
   };
 
   const handlePrevious = () => {
+    playClick();
+    haptics.triggerClick();
     if (currentIndex > 0) {
       setCurrentIndex((i) => i - 1);
     } else {

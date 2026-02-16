@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { BookOpenText, Globe, ArrowLeft, ArrowRight, Flag } from "lucide-react";
 import type { Presentation } from "@/data/curriculum";
+import useSound from "use-sound";
+import { useHaptics } from "@/hooks/useHaptics";
 
 interface Props {
   presentations: Presentation[];
@@ -11,6 +13,22 @@ interface Props {
 
 const PresentationStep = ({ presentations, currentIndex, onNext, onPrevious }: Props) => {
   const item = presentations[currentIndex];
+  const haptics = useHaptics();
+
+  const [playClick] = useSound("https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3", { volume: 0.3 });
+  const [playNext] = useSound("https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3", { volume: 0.4 });
+
+  const handleNextClick = () => {
+    playNext();
+    haptics.triggerClick();
+    onNext();
+  };
+
+  const handlePreviousClick = () => {
+    playClick();
+    haptics.triggerClick();
+    onPrevious();
+  };
 
   return (
     <div className="relative flex flex-col items-center gap-8 w-full max-w-lg mx-auto">
@@ -42,14 +60,18 @@ const PresentationStep = ({ presentations, currentIndex, onNext, onPrevious }: P
         </div>
 
         <div className="w-full space-y-4">
-          <div className="rounded-[32px] bg-card p-6 border-2 border-border shadow-lg relative overflow-hidden group hover:border-primary/30 transition-colors">
+          <div
+            className="rounded-[32px] bg-card p-6 border-2 border-border shadow-lg relative overflow-hidden group hover:border-primary/30 transition-colors cursor-default"
+          >
             <div className="flex items-center gap-3 mb-2">
               <BookOpenText className="h-6 w-6 text-primary" />
             </div>
             <p className="font-body text-base text-foreground/90 leading-relaxed">{item.grammar}</p>
           </div>
 
-          <div className="rounded-[32px] bg-secondary/5 p-6 border-2 border-secondary/10 shadow-lg group hover:border-secondary/30 transition-colors">
+          <div
+            className="rounded-[32px] bg-secondary/5 p-6 border-2 border-secondary/10 shadow-lg group hover:border-secondary/30 transition-colors cursor-default"
+          >
             <div className="flex items-center gap-3 mb-2">
               <Globe className="h-6 w-6 text-secondary" />
             </div>
@@ -65,7 +87,7 @@ const PresentationStep = ({ presentations, currentIndex, onNext, onPrevious }: P
         {/* Previous Button */}
         <div className="pointer-events-auto shadow-xl rounded-full">
           <button
-            onClick={onPrevious}
+            onClick={handlePreviousClick}
             className="w-16 h-16 flex items-center justify-center rounded-full bg-background border-2 border-border hover:bg-muted transition-colors text-muted-foreground"
           >
             <ArrowLeft className="w-8 h-8" strokeWidth={3} />
@@ -74,7 +96,7 @@ const PresentationStep = ({ presentations, currentIndex, onNext, onPrevious }: P
 
         <div className="w-full max-w-xs pointer-events-auto shadow-2xl rounded-2xl">
           <button
-            onClick={onNext}
+            onClick={handleNextClick}
             className="w-full flex items-center justify-center rounded-2xl px-6 py-5 gradient-hero text-white shadow-lg transition-transform active:scale-95 text-xl font-black gap-3"
           >
             {currentIndex < presentations.length - 1 ? (
