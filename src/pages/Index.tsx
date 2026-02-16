@@ -250,6 +250,33 @@ const Index = () => {
               </div>
             );
           })}
+
+          {/* Coming Soon Lesson */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 * curriculum.lessons.length }}
+            className="group relative w-full flex items-center gap-5 rounded-[36px] p-6 text-left border-4 border-dashed border-border/40 bg-muted/20 opacity-60 grayscale cursor-not-allowed"
+          >
+            <div className="relative flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-[24px] bg-muted border-2 border-dashed border-border/60">
+              <Sparkles className="h-8 w-8 text-muted-foreground/30" strokeWidth={3} />
+            </div>
+
+            <div className="flex-1 min-w-0 space-y-1">
+              <p className="font-display text-2xl font-black tracking-tight text-muted-foreground">
+                Lesson {curriculum.lessons.length + 1}
+              </p>
+              <p className="font-body text-lg font-bold text-muted-foreground/60">
+                Coming Soon!
+              </p>
+            </div>
+
+            <div className="flex flex-col items-end opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="p-3 rounded-2xl bg-muted text-muted-foreground border border-border/40">
+                <Lock className="h-6 w-6" strokeWidth={4} />
+              </div>
+            </div>
+          </motion.div>
         </div>
       </main>
     </div>
