@@ -60,7 +60,7 @@ export const curriculum: Unit = {
   unit: "Greetings",
   lessons: [
     {
-      lesson_title: "How sabi people dey greet",
+      lesson_title: "How people wey sabi dey greet!",
       presentations: [
         {
           word: "Good morning",
@@ -75,13 +75,13 @@ export const curriculum: Unit = {
           cultural_note: "Use am greet people before you sleep",
         },
         {
-          word: "How you dey",
+          word: "How you dey?",
           picture: howYouDeyImg,
           grammar: "You go take am ask how pesin body dey feel",
           cultural_note: "How you go take ask how your friends dey do",
         },
         {
-          word: "How tings",
+          word: "How tings?",
           picture: howTingsImg,
           grammar: "Take am check how tings dey go",
           cultural_note: "You fit take am ask how friends and other people dey do",
@@ -99,12 +99,12 @@ export const curriculum: Unit = {
           picture_context: [goodNightImg, goodNightImg],
         },
         {
-          speaker1: "How you dey",
-          speaker2: "I dey fine, you nko",
+          speaker1: "How you dey?",
+          speaker2: "I dey fine, you nko?",
           picture_context: [howYouDeyImg, howYouDeyImg],
         },
         {
-          speaker1: "How tings",
+          speaker1: "How tings?",
           speaker2: "Tings dey okay 😊",
           picture_context: [howTingsImg, howTingsImg],
         },
@@ -114,14 +114,14 @@ export const curriculum: Unit = {
           type: "multiple_choice",
           question_picture: goodMorningImg,
           question_word: "Good morning",
-          options: ["Good morning", "Good night", "How you dey", "How tings"],
+          options: ["Good morning", "Good night", "How you dey?", "How tings?"],
           answer: "Good morning",
         },
         {
           type: "multiple_choice",
           question_picture: goodNightImg,
           question_word: "Good night",
-          options: ["How tings", "Good morning", "Good night", "How you dey"],
+          options: ["How tings?", "Good morning", "Good night", "How you dey?"],
           answer: "Good night",
         },
       ],
@@ -131,19 +131,19 @@ export const curriculum: Unit = {
           pairs: [
             { word: "Good morning", picture: goodMorningImg },
             { word: "Good night", picture: goodNightImg },
-            { word: "How you dey", picture: howYouDeyImg },
-            { word: "How tings", picture: howTingsImg },
+            { word: "How you dey?", picture: howYouDeyImg },
+            { word: "How tings?", picture: howTingsImg },
           ],
         },
       ],
     },
     {
-      lesson_title: "How you go take greet Friends & Family",
+      lesson_title: "How you go take greet Friends & Family!",
       presentations: [
         {
           word: "I throway salute",
           picture: throwSaluteImg,
-          grammar: "Nah for friends or family",
+          grammar: "Na for friends or family",
           cultural_note: "How you go greet to show respect",
         },
         {
@@ -155,7 +155,7 @@ export const curriculum: Unit = {
         {
           word: "Twale",
           picture: twaleImg,
-          grammar: "Friendly greeting",
+          grammar: "Greet friends and oga dem",
           cultural_note: "How you go greet for street",
         },
       ],
@@ -166,7 +166,7 @@ export const curriculum: Unit = {
           picture_context: [howYouDeyImg, howYouDeyImg],
         },
         {
-          speaker1: "Waiting they soft",
+          speaker1: "Wetin dey sup?",
           speaker2: "No wahala 😊",
           picture_context: [throwSaluteImg, twaleImg],
         },
@@ -199,7 +199,7 @@ export const curriculum: Unit = {
       ],
     },
     {
-      lesson_title: "Greetings for Elderly people",
+      lesson_title: "Greetings for people wey don old!",
       presentations: [
         {
           word: "Good morning Papa, how body?",
@@ -210,8 +210,8 @@ export const curriculum: Unit = {
         {
           word: "Good morning Mama, how body?",
           picture: goodMorningMamaImg,
-          grammar: "Greet old woman with respect",
-          cultural_note: "Used to show respect for older women",
+          grammar: "Take am greet old woman with respect",
+          cultural_note: "Use am show respect for old woman",
         },
       ],
       dialogues: [
@@ -246,13 +246,13 @@ export const curriculum: Unit = {
       ],
     },
     {
-      lesson_title: "Other Ways to take Greet People",
+      lesson_title: "Other Ways to take Greet People!",
       presentations: [
         {
           word: "How far?",
           picture: howFarImg,
           grammar: "Simple greeting",
-          cultural_note: "Take am ask how persin body dey do",
+          cultural_note: "Take am ask how person body dey do",
         },
         {
           word: "Una well done o",
@@ -270,7 +270,7 @@ export const curriculum: Unit = {
           word: "We go see tomorrow",
           picture: weGoSeeImg,
           grammar: "When you Promise to meet persin again",
-          cultural_note: "When you go see persin later",
+          cultural_note: "When you go see person later",
         },
       ],
       dialogues: [
@@ -308,7 +308,7 @@ export const curriculum: Unit = {
             { word: "How far?", picture: howFarImg },
             { word: "Una well done o", picture: unaWellDoneImg },
             { word: "Bye bye o", picture: byeByeImg },
-            { word: "We go see tomorrow", picture: weGoSeeImg },
+            { word: "We go see tomo rrow", picture: weGoSeeImg },
           ],
         },
       ],
