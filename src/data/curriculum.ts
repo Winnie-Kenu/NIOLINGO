@@ -43,11 +43,26 @@ export interface Assessment {
   pairs: AssessmentPair[];
 }
 
+export interface FillInGap {
+  sentence: string;
+  answer: string;
+  options: string[];
+  picture: string;
+}
+
+export interface TypingExercise {
+  sentence: string;
+  answer: string;
+  picture: string;
+}
+
 export interface Lesson {
   lesson_title: string;
   presentations: Presentation[];
   dialogues: Dialogue[];
   exercises: Exercise[];
+  fillInGap: FillInGap[];
+  typingExercises: TypingExercise[];
   assessment: Assessment[];
 }
 
@@ -125,6 +140,32 @@ export const curriculum: Unit = {
           answer: "Good night",
         },
       ],
+      fillInGap: [
+        {
+          sentence: "Good ___",
+          answer: "morning",
+          options: ["morning", "night", "dey", "tings"],
+          picture: goodMorningImg,
+        },
+        {
+          sentence: "How you ___?",
+          answer: "dey",
+          options: ["dey", "hail", "far", "sup"],
+          picture: howYouDeyImg,
+        },
+      ],
+      typingExercises: [
+        {
+          sentence: "Good ___",
+          answer: "morning",
+          picture: goodMorningImg,
+        },
+        {
+          sentence: "How you ___?",
+          answer: "dey",
+          picture: howYouDeyImg,
+        },
+      ],
       assessment: [
         {
           type: "match_pairs",
@@ -187,6 +228,32 @@ export const curriculum: Unit = {
           answer: "Twale",
         },
       ],
+      fillInGap: [
+        {
+          sentence: "I ___ salute",
+          answer: "throway",
+          options: ["hail", "throway", "dey", "give"],
+          picture: throwSaluteImg,
+        },
+        {
+          sentence: "I dey ___ o",
+          answer: "hail",
+          options: ["hail", "throway", "salute", "sup"],
+          picture: iDeyHailImg,
+        },
+      ],
+      typingExercises: [
+        {
+          sentence: "I ___ salute",
+          answer: "throway",
+          picture: throwSaluteImg,
+        },
+        {
+          sentence: "Twale ___",
+          answer: "oga",
+          picture: twaleImg,
+        },
+      ],
       assessment: [
         {
           type: "match_pairs",
@@ -233,6 +300,32 @@ export const curriculum: Unit = {
           question_word: "Good morning Papa, how body?",
           options: ["Good morning Papa, how body?", "Good morning Mama, how body?", "How far?", "Good morning"],
           answer: "Good morning Papa, how body?",
+        },
+      ],
+      fillInGap: [
+        {
+          sentence: "Good morning ___, how body?",
+          answer: "Papa",
+          options: ["Papa", "Mama", "Oga", "Friend"],
+          picture: goodMorningPapaImg,
+        },
+        {
+          sentence: "Good morning ___, how body?",
+          answer: "Mama",
+          options: ["Mama", "Papa", "Oga", "Friend"],
+          picture: goodMorningMamaImg,
+        },
+      ],
+      typingExercises: [
+        {
+          sentence: "How body ___?",
+          answer: "Papa",
+          picture: goodMorningPapaImg,
+        },
+        {
+          sentence: "Good morning ___",
+          answer: "Mama",
+          picture: goodMorningMamaImg,
         },
       ],
       assessment: [
@@ -299,6 +392,32 @@ export const curriculum: Unit = {
           question_word: "Bye bye o",
           options: ["We go see tomorrow", "How far?", "Bye bye o", "Una well done o"],
           answer: "Bye bye o",
+        },
+      ],
+      fillInGap: [
+        {
+          sentence: "How ___?",
+          answer: "far",
+          options: ["far", "dey", "tings", "sup"],
+          picture: howFarImg,
+        },
+        {
+          sentence: "___ well done o",
+          answer: "Una",
+          options: ["Una", "We", "I", "You"],
+          picture: unaWellDoneImg,
+        },
+      ],
+      typingExercises: [
+        {
+          sentence: "How ___?",
+          answer: "far",
+          picture: howFarImg,
+        },
+        {
+          sentence: "Bye ___ o",
+          answer: "bye",
+          picture: byeByeImg,
         },
       ],
       assessment: [

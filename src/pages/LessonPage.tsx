@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Star, Trophy, Sparkles, ArrowRight, Home, BookOpen, MessageSquare, Dumbbell, Link2, Flag } from "lucide-react";
+import { ArrowLeft, Star, Trophy, Sparkles, ArrowRight, Home, BookOpen, MessageSquare, Dumbbell, Link2, Flag, Type, Keyboard } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { curriculum } from "@/data/curriculum";
 import { useGameStore } from "@/stores/useGameStore";
@@ -8,11 +8,13 @@ import PresentationStep from "@/components/lesson/PresentationStep";
 import DialogueStep from "@/components/lesson/DialogueStep";
 import ExerciseStep from "@/components/lesson/ExerciseStep";
 import AssessmentStep from "@/components/lesson/AssessmentStep";
+import FillInGapStep from "@/components/lesson/FillInGapStep";
+import TypingStep from "@/components/lesson/TypingStep";
 import Mascot from "@/components/ui/Mascot";
 import { useHaptics } from "@/hooks/useHaptics";
 import useSound from "use-sound";
 
-type Phase = "presentation" | "dialogue" | "exercise" | "assessment" | "complete";
+type Phase = "presentation" | "dialogue" | "exercise" | "fillInGap" | "typing" | "assessment" | "complete";
 
 const LessonPage = () => {
   const { lessonIndex } = useParams<{ lessonIndex: string }>();
@@ -25,6 +27,8 @@ const LessonPage = () => {
   const [phase, setPhase] = useState<Phase>("presentation");
   const [presentationIndex, setPresentationIndex] = useState(0);
   const [exerciseScore, setExerciseScore] = useState(0);
+  const [fillInGapScore, setFillInGapScore] = useState(0);
+  const [typingScore, setTypingScore] = useState(0);
 
   // Sound effects
   const [playSuccess] = useSound("https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3", { volume: 0.5 });
@@ -73,7 +77,7 @@ const LessonPage = () => {
     playSuccess();
     haptics.triggerSuccess();
     setExerciseScore(score);
-    setPhase("assessment");
+    setPhase("fillInGap");
   };
   const handleExercisePrevious = () => {
     playClick();
@@ -81,8 +85,32 @@ const LessonPage = () => {
     setPhase("dialogue");
   };
 
+  const handleFillInGapComplete = (score: number) => {
+    playSuccess();
+    haptics.triggerSuccess();
+    setFillInGapScore(score);
+    setPhase("typing");
+  };
+  const handleFillInGapPrevious = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("exercise");
+  };
+
+  const handleTypingComplete = (score: number) => {
+    playSuccess();
+    haptics.triggerSuccess();
+    setTypingScore(score);
+    setPhase("assessment");
+  };
+  const handleTypingPrevious = () => {
+    playClick();
+    haptics.triggerClick();
+    setPhase("fillInGap");
+  };
+
   const handleAssessmentComplete = (score: number) => {
-    const finalScore = Math.round((exerciseScore + score) / 2);
+    const finalScore = Math.round((exerciseScore + fillInGapScore + typingScore + score) / 4);
     completeLesson(idx, finalScore);
     setPhase("complete");
   };
@@ -100,8 +128,10 @@ const LessonPage = () => {
   const getProgress = () => {
     switch (phase) {
       case "presentation": return ((presentationIndex + 1) / lesson.presentations.length) * 20;
-      case "dialogue": return 25 + 15;
-      case "exercise": return 50 + 10;
+      case "dialogue": return 25 + 5;
+      case "exercise": return 35 + 5;
+      case "fillInGap": return 45 + 5;
+      case "typing": return 55 + 10;
       case "assessment": return 75 + 10;
       case "complete": return 100;
       default: return 0;
@@ -113,6 +143,8 @@ const LessonPage = () => {
       case "presentation": return <BookOpen className="w-5 h-5" />;
       case "dialogue": return <MessageSquare className="w-5 h-5" />;
       case "exercise": return <Dumbbell className="w-5 h-5" />;
+      case "fillInGap": return <Type className="w-5 h-5" />;
+      case "typing": return <Keyboard className="w-5 h-5" />;
       case "assessment": return <Link2 className="w-5 h-5" />;
       default: return <Trophy className="w-5 h-5" />;
     }
@@ -173,6 +205,22 @@ const LessonPage = () => {
               onPrevious={handleExercisePrevious}
             />
           )}
+          {phase === "fillInGap" && (
+            <FillInGapStep
+              key="fillInGap"
+              fillInGaps={lesson.fillInGap}
+              onComplete={handleFillInGapComplete}
+              onPrevious={handleFillInGapPrevious}
+            />
+          )}
+          {phase === "typing" && (
+            <TypingStep
+              key="typing"
+              exercises={lesson.typingExercises}
+              onComplete={handleTypingComplete}
+              onPrevious={handleTypingPrevious}
+            />
+          )}
           {phase === "assessment" && lesson.assessment[0] && (
             <AssessmentStep
               key="assessment"
@@ -212,7 +260,9 @@ const LessonPage = () => {
               <div className="w-full max-w-sm bg-card border-[3px] sm:border-4 border-border/80 p-6 sm:p-10 rounded-[32px] sm:rounded-[48px] shadow-2xl flex flex-col items-center gap-4 sm:gap-6 relative overflow-hidden group">
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 <Trophy className="w-8 h-8 sm:w-12 sm:h-12 text-secondary mb-1 sm:mb-2 drop-shadow-md" />
-                <div className="text-6xl sm:text-8xl font-black text-primary tracking-tighter leading-none">{exerciseScore}%</div>
+                <div className="text-6xl sm:text-8xl font-black text-primary tracking-tighter leading-none">
+                  {Math.round((exerciseScore + fillInGapScore + typingScore + (useGameStore.getState().lessonProgress[idx]?.score || 0)) / 4)}%
+                </div>
                 <div className="flex items-center justify-center gap-2 sm:gap-3 py-3 sm:py-4 px-6 sm:px-8 bg-primary/10 rounded-2xl sm:rounded-[24px] text-primary font-black border-2 border-primary/20">
                   <Sparkles className="w-5 h-5 sm:w-8 sm:h-8 text-secondary" />
                   <span className="text-xl sm:text-3xl">+{exerciseScore >= 80 ? 20 : 10}</span>
